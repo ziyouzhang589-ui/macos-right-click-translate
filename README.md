@@ -2,6 +2,8 @@
 
 **选中文字，点右键，译文就弹在鼠标旁边。** 中文译英文，英文译简体中文。
 
+![演示：选中英文和中文右键出译文；访达里右键文件仍是原本的菜单](docs/demo.gif)
+
 > **English:** A macOS menu-bar utility that pops up a Chinese⇄English translation right next to the cursor when you right-click selected text. Works in Electron apps (Claude, VS Code, Slack) whose context menus can't be extended by the system. Uses Apple's on-device Translation framework — no API key, nothing leaves your Mac. Ships as a Claude Code skill.
 
 - **任何应用都能用**，包括 Claude、VS Code、Slack 这类右键菜单由应用自绘、系统无法往里加条目的 Electron 应用
