@@ -51,8 +51,39 @@ enum TranslationDirection: Equatable {
 }
 
 enum TranslationTextClassifier {
+    /// 按中英文的比重判断方向，而不是「出现汉字就算中文」。
+    ///
+    /// 一整段英文里混进一两个中文词（菜单名、人名等）是常见情况，
+    /// 若据此判成中译英，系统会把英文原样返回，看上去像没有翻译。
+    /// 这里用汉字个数与英文单词个数相比：汉字多算中文，否则算英文。
     static func direction(for text: String) -> TranslationDirection {
-        containsHanCharacter(text) ? .chineseToEnglish : .englishToChinese
+        let hanCount = hanCharacterCount(text)
+        guard hanCount > 0 else { return .englishToChinese }
+        return hanCount > latinWordCount(text) ? .chineseToEnglish : .englishToChinese
+    }
+
+    static func hanCharacterCount(_ text: String) -> Int {
+        text.unicodeScalars.reduce(into: 0) { count, scalar in
+            if isHan(scalar.value) { count += 1 }
+        }
+    }
+
+    /// 连续的拉丁字母算作一个单词，用来和汉字个数作比较。
+    static func latinWordCount(_ text: String) -> Int {
+        var count = 0
+        var insideWord = false
+        for scalar in text.unicodeScalars {
+            let isLetter = scalar.properties.isAlphabetic && !isHan(scalar.value)
+            if isLetter {
+                if !insideWord {
+                    count += 1
+                    insideWord = true
+                }
+            } else {
+                insideWord = false
+            }
+        }
+        return count
     }
 
     static func hasTranslatableContent(_ text: String) -> Bool {

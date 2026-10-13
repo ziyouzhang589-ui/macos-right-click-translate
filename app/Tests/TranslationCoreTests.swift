@@ -16,6 +16,22 @@ private enum TranslationCoreTests {
             "Mixed text containing Han characters should translate to English"
         )
         expect(
+            TranslationTextClassifier.direction(
+                for: "Open the 菜单 and copy the file to your desktop now"
+            ) == .englishToChinese,
+            "An English sentence with one Chinese word should still translate to Chinese"
+        )
+        expect(
+            TranslationTextClassifier.direction(
+                for: "这个菜单里的 Settings 选项可以关掉自动更新"
+            ) == .chineseToEnglish,
+            "A Chinese sentence with one English word should still translate to English"
+        )
+        expect(
+            TranslationTextClassifier.direction(for: "菜单") == .chineseToEnglish,
+            "A lone Chinese word should translate to English"
+        )
+        expect(
             TranslationTextClassifier.direction(for: "OpenAI 2026") == .englishToChinese,
             "English text with numbers should translate to Chinese"
         )
